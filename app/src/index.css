@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  /* Accent: teal, on a dark navy frame - a working POS, not a brochure. */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-900: #134e4a;
+  --color-chrome: #0b1220;
+  --color-chrome-2: #111a2e;
+  --color-chrome-3: #1b2740;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-100 text-[13px] text-slate-900 antialiased;
+}
+
+/* Amounts and quantities line up in columns. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* In the base layer so utility classes can recolour a key on dark surfaces. */
+@layer base {
+  kbd {
+    @apply rounded border border-slate-300 bg-white px-1 py-px font-mono text-[10px] font-semibold text-slate-600 shadow-[0_1px_0_rgba(0,0,0,0.08)];
+  }
+}
+
+/* Receipts: only the receipt is printed, sized for 80 mm roll paper. */
+.print-only {
+  display: none;
+}
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 4mm;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .print-only,
+  .print-only * {
+    visibility: visible;
+  }
+  .print-only {
+    display: block;
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 72mm;
+  }
+}
