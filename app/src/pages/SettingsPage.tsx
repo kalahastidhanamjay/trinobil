@@ -26,6 +26,11 @@ export function SettingsPage() {
 function BillingSettings() {
   const queryClient = useQueryClient();
   const settings = useSettings();
+  // Restaurant-only settings show only when the business has those features.
+  const modules = useBusiness().data?.modules ?? [];
+  const kitchen = modules.includes('TABLES') || modules.includes('KITCHEN_DISPLAY');
+  const serviceCharge = modules.includes('SERVICE_CHARGE');
+  const takeaway = modules.includes('TAKEAWAY');
   const [s, setS] = useState<Settings>();
   const [busy, setBusy] = useState(false);
   useEffect(() => setS(settings.data), [settings.data]);
@@ -54,17 +59,23 @@ function BillingSettings() {
         <Toggle checked={!!s.gstRegistered} onChange={(v) => set('gstRegistered', v)} label="GST registered" hint="Off: simple bills at MRP with no GST lines" />
         <Toggle checked={!!s.printAfterSale} onChange={(v) => set('printAfterSale', v)} label="Print after every sale" />
         <Toggle checked={!!s.autoEmailInvoice} onChange={(v) => set('autoEmailInvoice', v)} label="Email the invoice automatically" hint="When the customer has an email" />
-        <Toggle checked={!!s.printKot} onChange={(v) => set('printKot', v)} label="Print KOT (restaurants)" />
+        {kitchen && (
+          <Toggle checked={!!s.printKot} onChange={(v) => set('printKot', v)} label="Print KOT" hint="Kitchen order ticket when items are sent to the kitchen" />
+        )}
         <div className="grid gap-4 pt-4 sm:grid-cols-2">
           <Field label="UPI ID" hint="Shown as a QR on bills">
             <Input value={s.upiId ?? ''} onChange={(e) => set('upiId', e.target.value)} placeholder="shopname@okaxis" />
           </Field>
-          <Field label="Service charge %" hint="Restaurants, dine-in">
-            <Input inputMode="decimal" value={s.serviceChargePercent ?? 0} onChange={(e) => set('serviceChargePercent', Number(e.target.value) || 0)} />
-          </Field>
-          <Field label="Packing charge ₹" hint="Restaurants, takeaway">
-            <Input inputMode="decimal" value={s.packingCharge ?? 0} onChange={(e) => set('packingCharge', Number(e.target.value) || 0)} />
-          </Field>
+          {serviceCharge && (
+            <Field label="Service charge %" hint="Dine-in bills">
+              <Input inputMode="decimal" value={s.serviceChargePercent ?? 0} onChange={(e) => set('serviceChargePercent', Number(e.target.value) || 0)} />
+            </Field>
+          )}
+          {takeaway && (
+            <Field label="Packing charge ₹" hint="Takeaway / parcel bills">
+              <Input inputMode="decimal" value={s.packingCharge ?? 0} onChange={(e) => set('packingCharge', Number(e.target.value) || 0)} />
+            </Field>
+          )}
           <Field label="Cashier max discount %">
             <Input inputMode="decimal" value={s.cashierMaxDiscountPercent ?? 0} onChange={(e) => set('cashierMaxDiscountPercent', Number(e.target.value) || 0)} />
           </Field>

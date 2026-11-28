@@ -1,22 +1,5 @@
 import clsx from 'clsx';
-import {
-  BarChart3,
-  Boxes,
-  ClipboardList,
-  History,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  Receipt,
-  Settings,
-  ShoppingCart,
-  Truck,
-  UserCog,
-  Users,
-  Wallet,
-  Warehouse,
-  X,
-} from 'lucide-react';
+import { BarChart3, Boxes, Building2, Car, ClipboardList, History, LayoutDashboard, LogOut, Menu, PlusCircle, Receipt, Settings, ShoppingCart, Truck, UserCog, Users, Wallet, Warehouse, X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -24,10 +7,7 @@ import { call, identity } from '@/lib/api';
 import { Logo } from '../components/Logo';
 import { useAuth } from '@/lib/auth';
 
-type Item = { to: string; label: string; icon: ReactNode; show: boolean; key?: string };
-
-/** Function keys that jump between screens from anywhere. */
-const hotkeys: Record<string, string> = { F2: '/billing', F3: '/sales', F4: '/items', F6: '/customers', F8: '/reports' };
+type Item = { to: string; label: string; icon: ReactNode; show: boolean };
 
 function Clock() {
   const [now, setNow] = useState(new Date());
@@ -48,45 +28,45 @@ export function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const business = useQuery({ queryKey: ['business'], queryFn: () => call(identity.GET('/api/v1/users/business')) });
+  const platform = auth.hasRole('PLATFORM_ADMIN');
+  const business = useQuery({ queryKey: ['business'], queryFn: () => call(identity.GET('/api/v1/users/business')), enabled: !platform });
   const canBill = auth.hasRole('OWNER', 'MANAGER', 'CASHIER');
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const to = hotkeys[e.key];
-      if (!to || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (to === '/billing' && !canBill) return;
-      e.preventDefault();
-      navigate(to);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [navigate, canBill]);
 
-  const groups: { title: string; items: Item[] }[] = [
+  const groups: { title: string; items: Item[] }[] = platform ? [
+    {
+      title: 'Platform',
+      items: [
+        { to: '/', label: 'Overview', icon: <LayoutDashboard />, show: true },
+        { to: '/businesses', label: 'Businesses', icon: <Building2 />, show: true },
+        { to: '/businesses/new', label: 'Onboard business', icon: <PlusCircle />, show: true },
+      ],
+    },
+  ] : [
     {
       title: 'Sell',
       items: [
         { to: '/', label: 'Dashboard', icon: <LayoutDashboard />, show: true },
-        { to: '/billing', label: 'New bill', icon: <ShoppingCart />, show: canBill, key: 'F2' },
-        { to: '/sales', label: 'Sales', icon: <Receipt />, show: true, key: 'F3' },
-        { to: '/customers', label: 'Customers', icon: <Users />, show: true, key: 'F6' },
+        { to: '/billing', label: 'New bill', icon: <ShoppingCart />, show: canBill },
+        { to: '/sales', label: 'Sales', icon: <Receipt />, show: true },
+        { to: '/customers', label: 'Customers', icon: <Users />, show: true },
       ],
     },
     {
       title: 'Stock',
       items: [
-        { to: '/items', label: 'Items', icon: <Boxes />, show: true, key: 'F4' },
+        { to: '/items', label: 'Items', icon: <Boxes />, show: true },
         { to: '/purchases', label: 'Purchases', icon: <ClipboardList />, show: auth.isBackOffice },
         { to: '/suppliers', label: 'Suppliers', icon: <Truck />, show: auth.isBackOffice },
         { to: '/stock', label: 'Stock', icon: <Warehouse />, show: auth.canManage },
+        { to: '/vehicles', label: 'Vehicles', icon: <Car />, show: (business.data?.modules ?? []).includes('PART_NUMBERS') },
       ],
     },
     {
       title: 'Business',
       items: [
         { to: '/expenses', label: 'Expenses', icon: <Wallet />, show: auth.isBackOffice },
-        { to: '/reports', label: 'Reports', icon: <BarChart3 />, show: auth.isBackOffice, key: 'F8' },
+        { to: '/reports', label: 'Reports', icon: <BarChart3 />, show: auth.isBackOffice },
         { to: '/staff', label: 'Staff', icon: <UserCog />, show: auth.canManage },
         { to: '/settings', label: 'Settings', icon: <Settings />, show: auth.canManage },
         { to: '/activity', label: 'Activity log', icon: <History />, show: auth.canManage },
@@ -124,7 +104,6 @@ export function AppLayout() {
                       {isActive && <span className="absolute inset-y-1.5 left-0 w-0.5 rounded bg-brand-500" />}
                       {i.icon}
                       <span className="flex-1">{i.label}</span>
-                      {i.key && <span className="font-mono text-[10px] text-slate-500 group-hover:text-slate-400">{i.key}</span>}
                     </>
                   )}
                 </NavLink>
@@ -171,7 +150,7 @@ export function AppLayout() {
             <Menu className="size-5" />
           </button>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">{business.data?.name ?? 'Trinobil'}</p>
+            <p className="truncate text-sm font-semibold">{platform ? 'Platform admin' : business.data?.name ?? 'Trinobil'}</p>
           </div>
           {title && <span className="hidden text-xs text-slate-500 sm:inline">/ {title}</span>}
           <div className="ml-auto flex items-center gap-4">
@@ -180,7 +159,7 @@ export function AppLayout() {
                 onClick={() => navigate('/billing')}
                 className="hidden h-7 items-center gap-2 rounded-md bg-brand-600 px-3 text-xs font-semibold hover:bg-brand-500 sm:inline-flex"
               >
-                <ShoppingCart className="size-3.5" /> New bill <span className="font-mono text-[10px] opacity-70">F2</span>
+                <ShoppingCart className="size-3.5" /> New bill
               </button>
             )}
             <Clock />

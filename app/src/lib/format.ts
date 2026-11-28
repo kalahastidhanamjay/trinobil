@@ -51,4 +51,3 @@ export const units: Record<string, string> = {
   DOZ: 'Dozen',
 };
 
-export const gstSlabs = [0, 5, 12, 18, 28];

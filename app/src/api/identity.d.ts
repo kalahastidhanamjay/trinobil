@@ -742,6 +742,7 @@ export interface components {
         IdentifyResponse: {
             next?: string;
             maskedEmail?: string;
+            maskedWhatsApp?: string;
         };
         ChangePasswordRequest: {
             currentPassword: string;

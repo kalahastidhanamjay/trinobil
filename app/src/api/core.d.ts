@@ -4,6 +4,54 @@
  */
 
 export interface paths {
+    "/api/v1/core/vehicles/types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["renameType"];
+        post?: never;
+        delete: operations["deleteType"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/vehicles/models/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["renameModel"];
+        post?: never;
+        delete: operations["deleteModel"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/vehicles/makes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["renameMake"];
+        post?: never;
+        delete: operations["deleteMake"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/suppliers/{id}": {
         parameters: {
             query?: never;
@@ -148,6 +196,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/job-cards/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_6"];
+        put: operations["update_2"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/inventory/warehouses/{id}": {
         parameters: {
             query?: never;
@@ -164,6 +228,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/inventory/batches/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["update_3"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/expenses/{id}": {
         parameters: {
             query?: never;
@@ -172,7 +252,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update_2"];
+        put: operations["update_4"];
         post?: never;
         delete: operations["delete"];
         options?: never;
@@ -203,7 +283,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["customer"];
+        get: operations["customer_1"];
         put: operations["updateCustomer"];
         post?: never;
         delete: operations["deactivateCustomer"];
@@ -244,6 +324,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/vehicles/types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/vehicles/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addModel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/vehicles/makes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addMake"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/suppliers": {
         parameters: {
             query?: never;
@@ -276,6 +404,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/sales/{saleId}/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_1"];
+        put?: never;
+        post: operations["create_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/sales/{id}/whatsapp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["whatsAppInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/sales/{id}/email": {
         parameters: {
             query?: never;
@@ -286,6 +446,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["emailInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/sales/{id}/delivered": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["delivered"];
         delete?: never;
         options?: never;
         head?: never;
@@ -525,7 +701,7 @@ export interface paths {
         };
         get: operations["search_1"];
         put?: never;
-        post: operations["create_1"];
+        post: operations["create_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -557,7 +733,7 @@ export interface paths {
         };
         get: operations["search_2"];
         put?: never;
-        post: operations["create_2"];
+        post: operations["create_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -646,6 +822,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/products/variants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createVariants"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/notifications/devices": {
         parameters: {
             query?: never;
@@ -657,6 +849,86 @@ export interface paths {
         put?: never;
         post: operations["register"];
         delete: operations["unregister"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/ledger/suppliers/{id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["pay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/ledger/customers/{id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["receive_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/job-cards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_2"];
+        put?: never;
+        post: operations["create_4"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/job-cards/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["status"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/job-cards/{id}/bill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["bill_1"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -694,6 +966,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/inventory/batches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_3"];
+        put?: never;
+        post: operations["add"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/inventory/batches/{id}/write-off": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["writeOff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/inventory/adjustments": {
         parameters: {
             query?: never;
@@ -719,7 +1023,7 @@ export interface paths {
         };
         get: operations["search_3"];
         put?: never;
-        post: operations["create_3"];
+        post: operations["create_5"];
         delete?: never;
         options?: never;
         head?: never;
@@ -749,7 +1053,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["customers"];
+        get: operations["customers_1"];
         put?: never;
         post: operations["createCustomer"];
         delete?: never;
@@ -806,6 +1110,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/assistant/translate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["translate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/assistant/transcribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["transcribe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/assistant/fill-local-names": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fillLocalNames"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/assistant/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["chat"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/activity/events": {
         parameters: {
             query?: never;
@@ -823,6 +1191,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/vehicles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["tree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/sales/{saleId}/returns/returnable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["returnable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/sales/{id}": {
         parameters: {
             query?: never;
@@ -831,6 +1231,38 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/sales/warranty": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["warranty"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/sales/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["deliveries"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1079,6 +1511,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/core/ledger/suppliers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["suppliers_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/ledger/suppliers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["supplier_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/ledger/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["customers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/ledger/customers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["customer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/core/inventory/stock": {
         parameters: {
             query?: never;
@@ -1087,6 +1583,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["stock"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/core/inventory/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["register_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1151,7 +1663,7 @@ export interface paths {
             cookie?: never;
         };
         /** Activity, newest first; filter by time, person, record type, one record, or text */
-        get: operations["list_1"];
+        get: operations["list_4"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1181,6 +1693,50 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        NameRequest: {
+            name: string;
+        };
+        ApiResponseTypeView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["TypeView"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        MakeView: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+            models?: components["schemas"]["ModelView"][];
+        };
+        ModelView: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+        };
+        TypeView: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+            makes?: components["schemas"]["MakeView"][];
+        };
+        ApiResponseModelView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ModelView"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        ApiResponseMakeView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["MakeView"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
         SupplierRequest: {
             name: string;
             contactPerson?: string;
@@ -1223,6 +1779,16 @@ export interface components {
             cashierMaxDiscountPercent?: number;
             managerMaxDiscountPercent?: number;
             printKot?: boolean;
+            fertilizerLicenceNo?: string;
+            pesticideLicenceNo?: string;
+            seedLicenceNo?: string;
+            billLanguage?: string;
+            localShopName?: string;
+            localAddress?: string;
+            gstRates?: number[];
+            gstPriceLimit?: number;
+            gstRateUpTo?: number;
+            gstRateAbove?: number;
         };
         ApiResponseSettingsResponse: {
             success?: boolean;
@@ -1244,6 +1810,18 @@ export interface components {
             printKot?: boolean;
             /** Format: uuid */
             logoImageId?: string;
+            fertilizerLicenceNo?: string;
+            pesticideLicenceNo?: string;
+            seedLicenceNo?: string;
+            billLanguage?: string;
+            localShopName?: string;
+            localAddress?: string;
+            gstRates?: number[];
+            gstPriceLimit?: number;
+            gstRateUpTo?: number;
+            gstRateAbove?: number;
+            whatsAppEnabled?: boolean;
+            assistantEnabled?: boolean;
         };
         ApiResponseUUID: {
             success?: boolean;
@@ -1392,6 +1970,18 @@ export interface components {
             createdBy?: string;
             items?: components["schemas"]["QuotationItemResponse"][];
         };
+        FitmentRequest: {
+            /** Format: uuid */
+            typeId?: string;
+            /** Format: uuid */
+            makeId?: string;
+            /** Format: uuid */
+            modelId?: string;
+            /** Format: int32 */
+            yearFrom?: number;
+            /** Format: int32 */
+            yearTo?: number;
+        };
         ProductRequest: {
             name: string;
             sku?: string;
@@ -1411,7 +2001,24 @@ export interface components {
             foodType?: string;
             kitchenStation?: string;
             ingredient?: boolean;
+            itemKind?: string;
+            manufacturer?: string;
+            batchTracked?: boolean;
+            variantGroup?: string;
+            size?: string;
+            color?: string;
+            gstByPrice?: boolean;
+            serialTracked?: boolean;
+            /** Format: int32 */
+            warrantyMonths?: number;
             openingStock?: number;
+            localName?: string;
+            partNumber?: string;
+            altPartNumbers?: string;
+            fitsVehicles?: string;
+            rackLocation?: string;
+            tradePrice?: number;
+            fitments?: components["schemas"]["FitmentRequest"][];
         };
         ApiResponseProductResponse: {
             success?: boolean;
@@ -1420,6 +2027,21 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
             correlationId?: string;
+        };
+        FitmentView: {
+            /** Format: uuid */
+            typeId?: string;
+            typeName?: string;
+            /** Format: uuid */
+            makeId?: string;
+            makeName?: string;
+            /** Format: uuid */
+            modelId?: string;
+            modelName?: string;
+            /** Format: int32 */
+            yearFrom?: number;
+            /** Format: int32 */
+            yearTo?: number;
         };
         ProductResponse: {
             /** Format: uuid */
@@ -1450,6 +2072,88 @@ export interface components {
             ingredient?: boolean;
             /** Format: uuid */
             imageId?: string;
+            itemKind?: string;
+            manufacturer?: string;
+            batchTracked?: boolean;
+            variantGroup?: string;
+            size?: string;
+            color?: string;
+            gstByPrice?: boolean;
+            serialTracked?: boolean;
+            /** Format: int32 */
+            warrantyMonths?: number;
+            localName?: string;
+            partNumber?: string;
+            altPartNumbers?: string;
+            fitsVehicles?: string;
+            rackLocation?: string;
+            tradePrice?: number;
+            fitments?: components["schemas"]["FitmentView"][];
+        };
+        JobBody: {
+            /** Format: uuid */
+            customerId?: string;
+            customerName?: string;
+            customerPhone?: string;
+            item?: string;
+            complaint?: string;
+            /** Format: date */
+            promisedDate?: string;
+            estimate?: number;
+            advancePaid?: number;
+            advanceMethod?: string;
+            notes?: string;
+            lines?: components["schemas"]["LineBody"][];
+        };
+        LineBody: {
+            /** Format: uuid */
+            productId?: string;
+            description?: string;
+            quantity?: number;
+            unitPrice?: number;
+        };
+        ApiResponseJobView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["JobView"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        JobView: {
+            /** Format: uuid */
+            id?: string;
+            jobNumber?: string;
+            /** Format: uuid */
+            customerId?: string;
+            customerName?: string;
+            customerPhone?: string;
+            item?: string;
+            complaint?: string;
+            /** @enum {string} */
+            status?: "RECEIVED" | "IN_PROGRESS" | "READY" | "DELIVERED" | "CANCELLED";
+            /** Format: date */
+            promisedDate?: string;
+            estimate?: number;
+            advancePaid?: number;
+            advanceMethod?: string;
+            notes?: string;
+            /** Format: uuid */
+            saleId?: string;
+            total?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            createdBy?: string;
+            lines?: components["schemas"]["LineView"][];
+        };
+        LineView: {
+            /** Format: uuid */
+            productId?: string;
+            description?: string;
+            quantity?: number;
+            unitPrice?: number;
+            amount?: number;
+            labour?: boolean;
         };
         WarehouseRequest: {
             name: string;
@@ -1473,6 +2177,43 @@ export interface components {
             address?: string;
             isDefault?: boolean;
             active?: boolean;
+        };
+        UpdateBatchRequest: {
+            batchNo: string;
+            /** Format: date */
+            mfgDate?: string;
+            /** Format: date */
+            expiryDate?: string;
+        };
+        ApiResponseBatchResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["BatchResponse"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        BatchResponse: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            productId?: string;
+            productName?: string;
+            itemKind?: string;
+            unit?: string;
+            manufacturer?: string;
+            /** Format: uuid */
+            warehouseId?: string;
+            batchNo?: string;
+            /** Format: date */
+            mfgDate?: string;
+            /** Format: date */
+            expiryDate?: string;
+            quantity?: number;
+            /** Format: int64 */
+            daysToExpiry?: number;
+            /** @enum {string} */
+            status?: "OK" | "EXPIRING" | "EXPIRED";
         };
         ExpenseRequest: {
             /** Format: uuid */
@@ -1535,6 +2276,7 @@ export interface components {
             state?: string;
             pincode?: string;
             notes?: string;
+            tradeCustomer?: boolean;
         };
         ApiResponseCustomerResponse: {
             success?: boolean;
@@ -1558,6 +2300,7 @@ export interface components {
             notes?: string;
             /** Format: date-time */
             createdAt?: string;
+            tradeCustomer?: boolean;
         };
         CategoryRequest: {
             name: string;
@@ -1609,6 +2352,16 @@ export interface components {
             createdAt?: string;
             createdBy?: string;
         };
+        ModelRequest: {
+            /** Format: uuid */
+            makeId: string;
+            name: string;
+        };
+        MakeRequest: {
+            /** Format: uuid */
+            typeId: string;
+            name: string;
+        };
         CreateSaleRequest: {
             items: components["schemas"]["SaleItemRequest"][];
             /** @enum {string} */
@@ -1626,6 +2379,20 @@ export interface components {
             offlineRef?: string;
             /** Format: date-time */
             soldAt?: string;
+            payments?: components["schemas"]["PaymentPart"][];
+            deliveryAddress?: string;
+            /** Format: date */
+            deliveryDate?: string;
+            advancePaid?: number;
+            /** @enum {string} */
+            advanceMethod?: "CASH" | "CARD" | "UPI" | "CREDIT" | "OTHER" | "SPLIT";
+            exchangeCredit?: number;
+            vehicleNumber?: string;
+        };
+        PaymentPart: {
+            /** @enum {string} */
+            method: "CASH" | "CARD" | "UPI" | "CREDIT" | "OTHER" | "SPLIT";
+            amount: number;
         };
         ProductRef: {
             /** Format: uuid */
@@ -1638,6 +2405,7 @@ export interface components {
             quantity: number;
             discount?: number;
             unitPrice?: number;
+            serialNumbers?: string[];
         };
         ApiResponseSaleResponse: {
             success?: boolean;
@@ -1646,11 +2414,6 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
             correlationId?: string;
-        };
-        PaymentPart: {
-            /** @enum {string} */
-            method: "CASH" | "CARD" | "UPI" | "CREDIT" | "OTHER" | "SPLIT";
-            amount: number;
         };
         SaleItemResponse: {
             /** Format: uuid */
@@ -1665,6 +2428,11 @@ export interface components {
             taxableAmount?: number;
             taxAmount?: number;
             lineTotal?: number;
+            batchInfo?: string;
+            manufacturer?: string;
+            serialNumbers?: string;
+            /** Format: date */
+            warrantyUntil?: string;
         };
         SaleResponse: {
             /** Format: uuid */
@@ -1701,6 +2469,76 @@ export interface components {
             payments?: components["schemas"]["PaymentPart"][];
             discountReason?: string;
             offlineRef?: string;
+            deliveryAddress?: string;
+            /** Format: date */
+            deliveryDate?: string;
+            deliveryStatus?: string;
+            /** Format: date-time */
+            deliveredAt?: string;
+            vehicleNumber?: string;
+        };
+        ReturnBody: {
+            items: components["schemas"]["ReturnLineBody"][];
+            reason?: string;
+            /** @enum {string} */
+            refundMethod?: "CASH" | "UPI" | "CARD" | "DUES" | "EXCHANGE";
+        };
+        ReturnLineBody: {
+            /** Format: uuid */
+            productId: string;
+            quantity: number;
+        };
+        ApiResponseReturnView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnView"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        ReturnItemView: {
+            /** Format: uuid */
+            productId?: string;
+            productName?: string;
+            quantity?: number;
+            taxRate?: number;
+            taxableAmount?: number;
+            taxAmount?: number;
+            lineTotal?: number;
+        };
+        ReturnView: {
+            /** Format: uuid */
+            id?: string;
+            returnNumber?: string;
+            /** Format: uuid */
+            saleId?: string;
+            invoiceNumber?: string;
+            /** Format: uuid */
+            customerId?: string;
+            reason?: string;
+            /** @enum {string} */
+            refundMethod?: "CASH" | "UPI" | "CARD" | "DUES" | "EXCHANGE";
+            taxableTotal?: number;
+            taxTotal?: number;
+            total?: number;
+            /** Format: date-time */
+            returnedAt?: string;
+            createdBy?: string;
+            items?: components["schemas"]["ReturnItemView"][];
+        };
+        WhatsAppInvoiceRequest: {
+            mobile?: string;
+        };
+        ApiResponseWhatsAppInvoiceResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["WhatsAppInvoiceResponse"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        WhatsAppInvoiceResponse: {
+            sentTo?: string;
         };
         EmailInvoiceRequest: {
             email?: string;
@@ -1933,6 +2771,7 @@ export interface components {
             items: components["schemas"]["PurchaseItemRequest"][];
             notes?: string;
             received?: boolean;
+            amountPaid?: number;
         };
         PurchaseItemRequest: {
             /** Format: uuid */
@@ -1940,6 +2779,11 @@ export interface components {
             quantity: number;
             unitCost: number;
             taxRate?: number;
+            batchNo?: string;
+            /** Format: date */
+            mfgDate?: string;
+            /** Format: date */
+            expiryDate?: string;
         };
         ApiResponsePurchaseResponse: {
             success?: boolean;
@@ -1958,6 +2802,11 @@ export interface components {
             taxRate?: number;
             taxAmount?: number;
             lineTotal?: number;
+            batchNo?: string;
+            /** Format: date */
+            mfgDate?: string;
+            /** Format: date */
+            expiryDate?: string;
         };
         PurchaseResponse: {
             /** Format: uuid */
@@ -1984,6 +2833,7 @@ export interface components {
             createdAt?: string;
             createdBy?: string;
             items?: components["schemas"]["PurchaseItemResponse"][];
+            amountPaid?: number;
         };
         ScanRequest: {
             lines: string[];
@@ -2025,10 +2875,68 @@ export interface components {
             /** Format: uuid */
             productId?: string;
         };
+        VariantsRequest: {
+            base: components["schemas"]["ProductRequest"];
+            sizes?: string[];
+            colors?: string[];
+            sizePrices?: {
+                [key: string]: number;
+            };
+            openingStock?: {
+                [key: string]: number;
+            };
+        };
+        ApiResponseListProductResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ProductResponse"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
         DeviceRequest: {
             token: string;
             platform?: string;
             language?: string;
+        };
+        PaymentBody: {
+            amount: number;
+            method: string;
+            note?: string;
+        };
+        ApiResponseStatement: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["Statement"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        Entry: {
+            /** Format: date-time */
+            at?: string;
+            type?: string;
+            reference?: string;
+            amount?: number;
+            balance?: number;
+            note?: string;
+        };
+        Statement: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+            phone?: string;
+            balance?: number;
+            entries?: components["schemas"]["Entry"][];
+        };
+        StatusBody: {
+            /** @enum {string} */
+            status?: "RECEIVED" | "IN_PROGRESS" | "READY" | "DELIVERED" | "CANCELLED";
+        };
+        BillBody: {
+            /** @enum {string} */
+            paymentMethod?: "CASH" | "CARD" | "UPI" | "CREDIT" | "OTHER" | "SPLIT";
+            labourTaxRate?: number;
         };
         TransferRequest: {
             /** Format: uuid */
@@ -2064,6 +2972,22 @@ export interface components {
             /** Format: date-time */
             createdAt?: string;
             createdBy?: string;
+        };
+        AddBatchRequest: {
+            /** Format: uuid */
+            productId: string;
+            /** Format: uuid */
+            warehouseId?: string;
+            batchNo: string;
+            /** Format: date */
+            mfgDate?: string;
+            /** Format: date */
+            expiryDate?: string;
+            quantity: number;
+            addToStock?: boolean;
+        };
+        WriteOffRequest: {
+            reason?: string;
         };
         AdjustmentRequest: {
             /** Format: uuid */
@@ -2132,6 +3056,82 @@ export interface components {
             countedCash: number;
             notes?: string;
         };
+        TranslateRequest: {
+            language: string;
+            /** @enum {string} */
+            kind?: "ITEMS" | "SHOP";
+            texts: string[];
+        };
+        ApiResponseTranslateResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["TranslateResponse"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        TranslateResponse: {
+            translations?: string[];
+        };
+        TranscribeRequest: {
+            audio: string;
+            format?: string;
+        };
+        ApiResponseTranscribeResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["TranscribeResponse"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        TranscribeResponse: {
+            text?: string;
+        };
+        ApiResponseFillResult: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["FillResult"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        FillResult: {
+            /** Format: int32 */
+            filled?: number;
+            /** Format: int64 */
+            remaining?: number;
+        };
+        ChatRequest: {
+            messages: components["schemas"]["Turn"][];
+            voice?: boolean;
+        };
+        Turn: {
+            role?: string;
+            content?: string;
+        };
+        ApiResponseReply: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["Reply"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        Draft: {
+            type?: string;
+            title?: string;
+            lines?: string[];
+            total?: number;
+            endpoint?: string;
+            body?: components["schemas"]["JsonNode"];
+            idempotent?: boolean;
+        };
+        JsonNode: Record<string, never>;
+        Reply: {
+            reply?: string;
+            actions?: components["schemas"]["Draft"][];
+        };
         ClientEvent: {
             action: string;
             entityType: string;
@@ -2146,6 +3146,14 @@ export interface components {
             success?: boolean;
             message?: string;
             data?: components["schemas"]["WastageView"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        ApiResponseListTypeView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["TypeView"][];
             /** Format: date-time */
             timestamp?: string;
             correlationId?: string;
@@ -2193,6 +3201,61 @@ export interface components {
             /** Format: date-time */
             soldAt?: string;
             createdBy?: string;
+        };
+        ApiResponseListReturnView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnView"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        ApiResponseListReturnable: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["Returnable"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        Returnable: {
+            /** Format: uuid */
+            productId?: string;
+            productName?: string;
+            sold?: number;
+            returned?: number;
+            unitAmount?: number;
+        };
+        ApiResponseListWarrantyResult: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["WarrantyResult"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        WarrantyResult: {
+            serial?: string;
+            item?: string;
+            invoiceNumber?: string;
+            /** Format: uuid */
+            saleId?: string;
+            /** Format: date-time */
+            soldAt?: string;
+            /** Format: uuid */
+            customerId?: string;
+            /** Format: date */
+            warrantyUntil?: string;
+            underWarranty?: boolean;
+            cancelled?: boolean;
+        };
+        ApiResponseListSaleResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["SaleResponse"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
         };
         ApiResponseListPickupView: {
             success?: boolean;
@@ -2530,6 +3593,33 @@ export interface components {
             /** Format: date-time */
             createdAt?: string;
         };
+        ApiResponseListDueRow: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["DueRow"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        DueRow: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+            phone?: string;
+            total?: number;
+            paid?: number;
+            balance?: number;
+            /** Format: date-time */
+            lastActivity?: string;
+        };
+        ApiResponseListJobView: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["JobView"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
         ApiResponseListWarehouseResponse: {
             success?: boolean;
             message?: string;
@@ -2575,6 +3665,36 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        ApiResponseRegisterResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["RegisterResponse"];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
+        };
+        RegisterResponse: {
+            /** Format: date */
+            from?: string;
+            /** Format: date */
+            to?: string;
+            rows?: components["schemas"]["RegisterRow"][];
+        };
+        RegisterRow: {
+            /** Format: uuid */
+            productId?: string;
+            name?: string;
+            itemKind?: string;
+            manufacturer?: string;
+            unit?: string;
+            price?: number;
+            mrp?: number;
+            opening?: number;
+            received?: number;
+            sold?: number;
+            otherChanges?: number;
+            closing?: number;
+        };
         ApiResponsePageResponseStockMovementResponse: {
             success?: boolean;
             message?: string;
@@ -2605,7 +3725,7 @@ export interface components {
             quantityChange?: number;
             balanceAfter?: number;
             /** @enum {string} */
-            movementType?: "OPENING_STOCK" | "SALE" | "SALE_CANCELLED" | "PURCHASE_RECEIVED" | "PURCHASE_CANCELLED" | "ADJUSTMENT_IN" | "ADJUSTMENT_OUT" | "TRANSFER_OUT" | "TRANSFER_IN" | "WASTAGE";
+            movementType?: "OPENING_STOCK" | "SALE" | "SALE_CANCELLED" | "PURCHASE_RECEIVED" | "PURCHASE_CANCELLED" | "ADJUSTMENT_IN" | "ADJUSTMENT_OUT" | "TRANSFER_OUT" | "TRANSFER_IN" | "WASTAGE" | "SALE_RETURNED";
             referenceType?: string;
             /** Format: uuid */
             referenceId?: string;
@@ -2613,6 +3733,14 @@ export interface components {
             /** Format: date-time */
             createdAt?: string;
             createdBy?: string;
+        };
+        ApiResponseListBatchResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["BatchResponse"][];
+            /** Format: date-time */
+            timestamp?: string;
+            correlationId?: string;
         };
         ApiResponsePageResponseAdjustmentResponse: {
             success?: boolean;
@@ -2746,6 +3874,150 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    renameType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NameRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTypeView"];
+                };
+            };
+        };
+    };
+    deleteType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    renameModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NameRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseModelView"];
+                };
+            };
+        };
+    };
+    deleteModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    renameMake: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NameRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMakeView"];
+                };
+            };
+        };
+    };
+    deleteMake: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     supplier: {
         parameters: {
             query?: never;
@@ -3220,6 +4492,54 @@ export interface operations {
             };
         };
     };
+    get_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseJobView"];
+                };
+            };
+        };
+    };
+    update_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseJobView"];
+                };
+            };
+        };
+    };
     updateWarehouse: {
         parameters: {
             query?: never;
@@ -3246,7 +4566,33 @@ export interface operations {
             };
         };
     };
-    update_2: {
+    update_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseBatchResponse"];
+                };
+            };
+        };
+    };
+    update_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -3342,7 +4688,7 @@ export interface operations {
             };
         };
     };
-    customer: {
+    customer_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3507,6 +4853,78 @@ export interface operations {
             };
         };
     };
+    addType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NameRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTypeView"];
+                };
+            };
+        };
+    };
+    addModel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModelRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseModelView"];
+                };
+            };
+        };
+    };
+    addMake: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MakeRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMakeView"];
+                };
+            };
+        };
+    };
     suppliers: {
         parameters: {
             query?: never;
@@ -3606,6 +5024,80 @@ export interface operations {
             };
         };
     };
+    list_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                saleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListReturnView"];
+                };
+            };
+        };
+    };
+    create_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                saleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReturnBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnView"];
+                };
+            };
+        };
+    };
+    whatsAppInvoice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["WhatsAppInvoiceRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseWhatsAppInvoiceResponse"];
+                };
+            };
+        };
+    };
     emailInvoice: {
         parameters: {
             query?: never;
@@ -3628,6 +5120,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseEmailInvoiceResponse"];
+                };
+            };
+        };
+    };
+    delivered: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSaleResponse"];
                 };
             };
         };
@@ -4057,7 +5571,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -4134,7 +5648,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -4256,6 +5770,9 @@ export interface operations {
                 q?: string;
                 categoryId?: string;
                 includeInactive?: boolean;
+                vehicleTypeId?: string;
+                vehicleMakeId?: string;
+                vehicleModelId?: string;
                 page?: number;
                 size?: number;
             };
@@ -4296,6 +5813,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseProductResponse"];
+                };
+            };
+        };
+    };
+    createVariants: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VariantsRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListProductResponse"];
                 };
             };
         };
@@ -4342,6 +5883,156 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    pay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStatement"];
+                };
+            };
+        };
+    };
+    receive_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStatement"];
+                };
+            };
+        };
+    };
+    list_2: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListJobView"];
+                };
+            };
+        };
+    };
+    create_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobBody"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseJobView"];
+                };
+            };
+        };
+    };
+    status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseJobView"];
+                };
+            };
+        };
+    };
+    bill_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["BillBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSaleResponse"];
                 };
             };
         };
@@ -4437,6 +6128,80 @@ export interface operations {
             };
         };
     };
+    list_3: {
+        parameters: {
+            query?: {
+                productId?: string;
+                expiringWithinDays?: number;
+                includeEmpty?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListBatchResponse"];
+                };
+            };
+        };
+    };
+    add: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseBatchResponse"];
+                };
+            };
+        };
+    };
+    writeOff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["WriteOffRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseBatchResponse"];
+                };
+            };
+        };
+    };
     adjustments: {
         parameters: {
             query?: {
@@ -4510,7 +6275,7 @@ export interface operations {
             };
         };
     };
-    create_3: {
+    create_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -4578,7 +6343,7 @@ export interface operations {
             };
         };
     };
-    customers: {
+    customers_1: {
         parameters: {
             query?: {
                 q?: string;
@@ -4718,6 +6483,98 @@ export interface operations {
             };
         };
     };
+    translate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranslateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTranslateResponse"];
+                };
+            };
+        };
+    };
+    transcribe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TranscribeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTranscribeResponse"];
+                };
+            };
+        };
+    };
+    fillLocalNames: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseFillResult"];
+                };
+            };
+        };
+    };
+    chat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReply"];
+                };
+            };
+        };
+    };
     event: {
         parameters: {
             query?: never;
@@ -4742,6 +6599,48 @@ export interface operations {
             };
         };
     };
+    tree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTypeView"];
+                };
+            };
+        };
+    };
+    returnable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                saleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListReturnable"];
+                };
+            };
+        };
+    };
     get_1: {
         parameters: {
             query?: never;
@@ -4760,6 +6659,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseSaleResponse"];
+                };
+            };
+        };
+    };
+    warranty: {
+        parameters: {
+            query: {
+                serial: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWarrantyResult"];
+                };
+            };
+        };
+    };
+    deliveries: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListSaleResponse"];
                 };
             };
         };
@@ -5088,6 +7031,96 @@ export interface operations {
             };
         };
     };
+    suppliers_1: {
+        parameters: {
+            query?: {
+                q?: string;
+                all?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListDueRow"];
+                };
+            };
+        };
+    };
+    supplier_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStatement"];
+                };
+            };
+        };
+    };
+    customers: {
+        parameters: {
+            query?: {
+                q?: string;
+                all?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListDueRow"];
+                };
+            };
+        };
+    };
+    customer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStatement"];
+                };
+            };
+        };
+    };
     stock: {
         parameters: {
             query?: {
@@ -5107,6 +7140,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListStockLevelResponse"];
+                };
+            };
+        };
+    };
+    register_1: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                kind?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseRegisterResponse"];
                 };
             };
         };
@@ -5175,7 +7232,7 @@ export interface operations {
             };
         };
     };
-    list_1: {
+    list_4: {
         parameters: {
             query?: {
                 from?: string;

@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { CheckCircle2, Keyboard, ScanBarcode, Trash2, UserRound } from 'lucide-react';
+import { VehicleFilterBar } from '@/components/Vehicles';
+import { fits, matchesSearch, priceFor, useModule, type VehicleFilter } from '@/lib/spares';
+import { CheckCircle2, ScanBarcode, Trash2, UserRound } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { toast } from 'sonner';
 import { Receipt } from '@/components/Receipt';
@@ -13,10 +15,10 @@ import { useBusiness, useCategories, useCustomers, useProducts, useSettings, typ
 type Line = { product: Product; quantity: number; discount: number };
 
 const methods = [
-  { value: 'CASH', label: 'Cash', key: '1' },
-  { value: 'UPI', label: 'UPI', key: '2' },
-  { value: 'CARD', label: 'Card', key: '3' },
-  { value: 'CREDIT', label: 'Credit', key: '4' },
+  { value: 'CASH', label: 'Cash' },
+  { value: 'UPI', label: 'UPI' },
+  { value: 'CARD', label: 'Card' },
+  { value: 'CREDIT', label: 'Credit' },
 ] as const;
 type Method = (typeof methods)[number]['value'];
 
@@ -29,16 +31,6 @@ function parseEntry(raw: string): { quantity: number; query: string } {
 /** Bill columns: rate and discount are hidden on a phone. */
 const cols = 'grid-cols-[22px_minmax(0,1fr)_60px_84px_22px] sm:grid-cols-[36px_minmax(0,1fr)_96px_90px_84px_100px_32px]';
 
-const shortcuts: [string, string][] = [
-  ['F1', 'Search / scan'],
-  ['↑ ↓', 'Pick from list'],
-  ['Enter', 'Add item'],
-  ['3*', 'Quantity 3'],
-  ['Alt 1–4', 'Payment mode'],
-  ['F9', 'Charge bill'],
-  ['Alt X', 'Clear bill'],
-];
-
 /** Counter billing, built for the keyboard and a barcode scanner. */
 export function BillingPage() {
   const queryClient = useQueryClient();
@@ -48,6 +40,10 @@ export function BillingPage() {
   const products = useProducts();
   const categories = useCategories();
   const customers = useCustomers();
+  // Auto spares: parts for one vehicle, the customer's vehicle number, mechanic (trade) prices.
+  const spares = useModule('PART_NUMBERS');
+  const [vehicle, setVehicle] = useState<VehicleFilter>();
+  const [vehicleNo, setVehicleNo] = useState('');
   const settings = useSettings();
   const business = useBusiness();
   const [lines, setLines] = useState<Line[]>([]);
@@ -61,19 +57,24 @@ export function BillingPage() {
   const searchRef = useRef<HTMLInputElement>(null);
   const qtyRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const sellable = useMemo(() => (products.data ?? []).filter((p) => !p.ingredient), [products.data]);
+  const sellable = useMemo(
+    () => (products.data ?? []).filter((p) => !p.ingredient && (!vehicle || fits(p, vehicle))),
+    [products.data, vehicle],
+  );
   const { quantity: entryQty, query } = parseEntry(entry);
   const matches = useMemo(() => {
     const q = query.toLowerCase();
     if (!q) return [];
     return sellable
-      .filter((p) => p.name?.toLowerCase().includes(q) || p.sku?.toLowerCase().includes(q) || p.barcode === query)
+      .filter((p) => matchesSearch(p, q, query))
       .sort((a, b) => Number(b.name?.toLowerCase().startsWith(q)) - Number(a.name?.toLowerCase().startsWith(q)))
       .slice(0, 12);
   }, [sellable, query]);
   const quick = useMemo(() => sellable.filter((p) => !categoryId || p.categoryId === categoryId), [sellable, categoryId]);
 
-  const gross = lines.reduce((t, l) => t + (l.product.price ?? 0) * l.quantity, 0);
+  const trade = !!customers.data?.find((c) => c.id === customerId)?.tradeCustomer;
+  const price = (p: (typeof sellable)[number]) => priceFor(p, trade);
+  const gross = lines.reduce((t, l) => t + price(l.product) * l.quantity, 0);
   const discount = lines.reduce((t, l) => t + l.discount, 0);
   const total = gross - discount;
   const units = lines.reduce((t, l) => t + l.quantity, 0);
@@ -158,12 +159,14 @@ export function BillingPage() {
             invoiceEmail: invoiceEmail.trim() || undefined,
             totalAmount: total,
             items: lines.map((l) => ({ productId: l.product.id, quantity: l.quantity, discount: l.discount })),
+            vehicleNumber: spares && vehicleNo.trim() ? vehicleNo.trim().toUpperCase() : undefined,
           },
         }),
       );
       keyRef.current = null;
       setLines([]);
       setCustomerId('');
+      setVehicleNo('');
       setInvoiceEmail('');
       setReceived('');
       setMethod('CASH');
@@ -177,32 +180,6 @@ export function BillingPage() {
       setBusy(false);
     }
   }
-
-  // Counter-wide shortcuts.
-  const checkoutRef = useRef(checkout);
-  checkoutRef.current = checkout;
-  const clearRef = useRef(clearBill);
-  clearRef.current = clearBill;
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (done) return;
-      if (e.key === 'F1') {
-        e.preventDefault();
-        focusSearch();
-      } else if (e.key === 'F9' || (e.key === 'Enter' && e.ctrlKey)) {
-        e.preventDefault();
-        checkoutRef.current();
-      } else if (e.altKey && /^[1-4]$/.test(e.key)) {
-        e.preventDefault();
-        setMethod(methods[Number(e.key) - 1].value);
-      } else if (e.altKey && e.key.toLowerCase() === 'x') {
-        e.preventDefault();
-        clearRef.current();
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [done]);
 
   function closeDone() {
     setDone(undefined);
@@ -221,12 +198,11 @@ export function BillingPage() {
               ref={searchRef}
               autoFocus
               className="h-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-slate-400"
-              placeholder="Type item name, code or scan barcode…   (3*milk adds three)"
+              placeholder="Type item name, code or scan barcode…"
               value={entry}
               onChange={(e) => setEntry(e.target.value)}
               onKeyDown={onSearchKey}
             />
-            <kbd>F1</kbd>
           </div>
           {matches.length > 0 && (
             <div className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-slate-300 bg-white shadow-xl">
@@ -254,9 +230,11 @@ export function BillingPage() {
                     )}
                   >
                     <span className="truncate font-medium">{p.name}</span>
-                    <span className={clsx('num truncate text-xs', i === cursor ? 'text-brand-100' : 'text-slate-400')}>{p.barcode ?? p.sku ?? '—'}</span>
+                    <span className={clsx('num truncate text-xs', i === cursor ? 'text-brand-100' : 'text-slate-400')}>
+                      {[p.partNumber, p.rackLocation && `📍${p.rackLocation}`].filter(Boolean).join(' ') || p.barcode || p.sku || '—'}
+                    </span>
                     <span className={clsx('num text-right text-xs', out && i !== cursor && 'text-rose-600')}>{p.trackInventory ? qty(p.stock) : '∞'}</span>
-                    <span className="num text-right font-semibold">{money(p.price)}</span>
+                    <span className="num text-right font-semibold">{money(price(p))}</span>
                   </button>
                 );
               })}
@@ -264,9 +242,11 @@ export function BillingPage() {
           )}
         </div>
 
+        {spares && <VehicleFilterBar value={vehicle} onChange={setVehicle} />}
+
         <div className="flex min-h-[260px] flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">
           <div className={clsx('grid items-center gap-2 bg-chrome px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400', cols)}>
-            <span>#</span>
+            <span />
             <span>Item</span>
             <span className="text-center">Qty</span>
             <span className="hidden text-right sm:block">Rate</span>
@@ -277,15 +257,8 @@ export function BillingPage() {
           <div className="flex-1 divide-y divide-slate-100 overflow-y-auto">
             {lines.length === 0 && (
               <div className="flex h-full flex-col items-center justify-center gap-3 py-10 text-center text-slate-400">
-                <Keyboard className="size-8 text-slate-300" />
+                <ScanBarcode className="size-8 text-slate-300" />
                 <p className="text-sm">Start typing or scan — the bill builds here.</p>
-                <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs">
-                  {shortcuts.map(([k, v]) => (
-                    <span key={k}>
-                      <kbd>{k}</kbd> {v}
-                    </span>
-                  ))}
-                </div>
               </div>
             )}
             {lines.map((l, i) => (
@@ -321,7 +294,7 @@ export function BillingPage() {
                     }
                   }}
                 />
-                <span className="num hidden text-right text-slate-600 sm:block">{money(l.product.price)}</span>
+                <span className="num hidden text-right text-slate-600 sm:block">{money(price(l.product))}</span>
                 <input
                   className="num hidden h-7 w-full rounded border border-slate-200 px-1.5 text-right outline-none focus:border-brand-500 sm:block"
                   inputMode="decimal"
@@ -330,7 +303,7 @@ export function BillingPage() {
                   onChange={(e) => update(lines.map((x) => (x === l ? { ...x, discount: Math.max(0, Number(e.target.value) || 0) } : x)))}
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === 'Escape') && focusSearch()}
                 />
-                <span className="num text-right font-semibold">{money((l.product.price ?? 0) * l.quantity - l.discount)}</span>
+                <span className="num text-right font-semibold">{money(price(l.product) * l.quantity - l.discount)}</span>
                 <button className="rounded p-1 text-slate-300 hover:bg-rose-50 hover:text-rose-600" onClick={() => setQuantity(l, 0)} aria-label="Remove" tabIndex={-1}>
                   <Trash2 className="size-3.5" />
                 </button>
@@ -378,7 +351,7 @@ export function BillingPage() {
                     )}
                   >
                     <p className={clsx('truncate text-xs font-medium', n > 0 && 'pr-5')}>{p.name}</p>
-                    <p className="num text-xs font-semibold text-brand-700">{money(p.price)}</p>
+                    <p className="num text-xs font-semibold text-brand-700">{money(price(p))}</p>
                     {n > 0 && <span className="num absolute right-1 top-1 rounded bg-brand-600 px-1 text-[10px] font-bold text-white">{qty(n)}</span>}
                   </button>
                 );
@@ -430,6 +403,10 @@ export function BillingPage() {
             {!customerId && (
               <Input className="mt-1.5" type="email" placeholder="Email the bill (optional)" value={invoiceEmail} onChange={(e) => setInvoiceEmail(e.target.value)} />
             )}
+            {trade && <p className="mt-1 text-xs font-medium text-brand-700">Mechanic / trade prices applied</p>}
+            {spares && (
+              <Input className="mt-1.5" maxLength={20} placeholder="Vehicle number (optional), e.g. AP 39 AB 1234" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value.toUpperCase())} />
+            )}
           </div>
 
           <div>
@@ -445,7 +422,6 @@ export function BillingPage() {
                   )}
                 >
                   {m.label}
-                  <span className={clsx('font-mono text-[9px]', method === m.value ? 'text-brand-100' : 'text-slate-400')}>Alt {m.key}</span>
                 </button>
               ))}
             </div>
@@ -475,23 +451,12 @@ export function BillingPage() {
 
           <Button size="lg" className="w-full justify-between text-base" disabled={lines.length === 0} busy={busy} onClick={checkout}>
             <span>Charge {money(total)}</span>
-            <kbd className="border-white/30 bg-white/15 text-white shadow-none">F9</kbd>
           </Button>
           <Button variant="ghost" size="sm" className="w-full" disabled={lines.length === 0} onClick={clearBill}>
-            Clear bill <kbd>Alt X</kbd>
+            Clear bill
           </Button>
         </div>
 
-        <div className="hidden rounded-lg border border-dashed border-slate-300 px-3 py-2 xl:block">
-          <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Shortcuts</p>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-500">
-            {shortcuts.map(([k, v]) => (
-              <span key={k} className="flex items-center gap-1.5">
-                <kbd>{k}</kbd> {v}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
       <Modal
@@ -503,7 +468,7 @@ export function BillingPage() {
             <>
               <SaleActions sale={done} />
               <Button autoFocus onClick={closeDone}>
-                Next bill <kbd className="border-white/30 bg-white/15 text-white shadow-none">Enter</kbd>
+                Next bill
               </Button>
             </>
           )

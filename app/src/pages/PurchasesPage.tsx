@@ -5,7 +5,8 @@ import { toast } from 'sonner';
 import { Badge, Button, Card, Empty, Field, Input, Modal, PageHeader, Select, Spinner, Table, Td, Toggle } from '@/components/ui';
 import { call, core, errorMessage } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
-import { date, gstSlabs, isoDay, money, qty } from '@/lib/format';
+import { date, isoDay, money, qty } from '@/lib/format';
+import { GstInput, isGstRate } from '@/components/GstInput';
 import { useProducts, useSuppliers } from '@/lib/queries';
 
 const statusTone = { ORDERED: 'amber', RECEIVED: 'green', CANCELLED: 'red' } as const;
@@ -101,7 +102,7 @@ export function PurchasesPage() {
   );
 }
 
-type Line = { productId: string; quantity: string; unitCost: string; taxRate: number };
+type Line = { productId: string; quantity: string; unitCost: string; taxRate: string };
 
 function PurchaseForm({ onClose }: { onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -111,11 +112,11 @@ function PurchaseForm({ onClose }: { onClose: () => void }) {
   const [billNo, setBillNo] = useState('');
   const [purchaseDate, setPurchaseDate] = useState(isoDay());
   const [received, setReceived] = useState(true);
-  const [lines, setLines] = useState<Line[]>([{ productId: '', quantity: '1', unitCost: '', taxRate: 0 }]);
+  const [lines, setLines] = useState<Line[]>([{ productId: '', quantity: '1', unitCost: '', taxRate: '' }]);
   const [busy, setBusy] = useState(false);
   const product = (id: string) => products.data?.find((p) => p.id === id);
   const net = lines.reduce((t, l) => t + Number(l.quantity || 0) * Number(l.unitCost || 0), 0);
-  const tax = lines.reduce((t, l) => t + (Number(l.quantity || 0) * Number(l.unitCost || 0) * l.taxRate) / 100, 0);
+  const tax = lines.reduce((t, l) => t + (Number(l.quantity || 0) * Number(l.unitCost || 0) * Number(l.taxRate || 0)) / 100, 0);
 
   const setLine = (i: number, patch: Partial<Line>) => setLines(lines.map((l, n) => (n === i ? { ...l, ...patch } : l)));
 
@@ -123,6 +124,7 @@ function PurchaseForm({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     const items = lines.filter((l) => l.productId && Number(l.quantity) > 0);
     if (items.length === 0) return toast.error('Add at least one item');
+    if (items.some((l) => !isGstRate(l.taxRate))) return toast.error('Enter the GST % (0 to 100) on every line');
     setBusy(true);
     try {
       await call(
@@ -132,7 +134,7 @@ function PurchaseForm({ onClose }: { onClose: () => void }) {
             supplierInvoiceNumber: billNo.trim() || undefined,
             purchaseDate,
             received,
-            items: items.map((l) => ({ productId: l.productId, quantity: Number(l.quantity), unitCost: Number(l.unitCost || 0), taxRate: l.taxRate })),
+            items: items.map((l) => ({ productId: l.productId, quantity: Number(l.quantity), unitCost: Number(l.unitCost || 0), taxRate: Number(l.taxRate) })),
           },
         }),
       );
@@ -184,7 +186,7 @@ function PurchaseForm({ onClose }: { onClose: () => void }) {
                 value={l.productId}
                 onChange={(e) => {
                   const p = product(e.target.value);
-                  setLine(i, { productId: e.target.value, unitCost: l.unitCost || (p?.costPrice?.toString() ?? ''), taxRate: p?.taxRate ?? l.taxRate });
+                  setLine(i, { productId: e.target.value, unitCost: l.unitCost || (p?.costPrice?.toString() ?? ''), taxRate: p?.taxRate?.toString() ?? l.taxRate });
                 }}
               >
                 <option value="">Choose item</option>
@@ -192,15 +194,13 @@ function PurchaseForm({ onClose }: { onClose: () => void }) {
               </Select>
               <Input inputMode="decimal" value={l.quantity} onChange={(e) => setLine(i, { quantity: e.target.value })} />
               <Input inputMode="decimal" value={l.unitCost} onChange={(e) => setLine(i, { unitCost: e.target.value })} />
-              <Select value={l.taxRate} onChange={(e) => setLine(i, { taxRate: Number(e.target.value) })}>
-                {gstSlabs.map((r) => <option key={r} value={r}>{r}%</option>)}
-              </Select>
+              <GstInput value={l.taxRate} onChange={(v) => setLine(i, { taxRate: v })} />
               <button type="button" className="text-slate-400 hover:text-rose-600" onClick={() => setLines(lines.filter((_, n) => n !== i))} aria-label="Remove line">
                 <Trash2 className="size-4" />
               </button>
             </div>
           ))}
-          <Button type="button" variant="ghost" size="sm" icon={<Plus className="size-4" />} onClick={() => setLines([...lines, { productId: '', quantity: '1', unitCost: '', taxRate: 0 }])}>
+          <Button type="button" variant="ghost" size="sm" icon={<Plus className="size-4" />} onClick={() => setLines([...lines, { productId: '', quantity: '1', unitCost: '', taxRate: '' }])}>
             Add line
           </Button>
         </div>

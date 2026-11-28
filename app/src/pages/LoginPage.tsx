@@ -112,11 +112,6 @@ export function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold leading-tight">The fastest counter in town.</h1>
           <p className="mt-2 max-w-md text-sm text-slate-400">Scan, type, charge. GST bills, live stock, purchases and reports for shops and restaurants.</p>
-          <div className="mt-5 flex gap-4 text-xs text-slate-400">
-            <span><kbd className="border-white/15 bg-white/5 text-slate-300 shadow-none">F2</kbd> New bill</span>
-            <span><kbd className="border-white/15 bg-white/5 text-slate-300 shadow-none">F9</kbd> Charge</span>
-            <span><kbd className="border-white/15 bg-white/5 text-slate-300 shadow-none">3*</kbd> Quantity</span>
-          </div>
         </div>
         <p className="relative text-xs text-slate-600">© {new Date().getFullYear()} Trinobil</p>
       </div>

@@ -200,7 +200,6 @@ export function Modal({ open, onClose, title, children, footer, wide }: { open: 
         <div className="flex items-center justify-between bg-chrome px-4 py-2.5 text-white">
           <h2 className="text-sm font-bold">{title}</h2>
           <button onClick={onClose} className="flex items-center gap-1.5 rounded p-1 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close">
-            <kbd className="border-white/20 bg-white/10 text-slate-300 shadow-none">Esc</kbd>
             <X className="size-4" />
           </button>
         </div>

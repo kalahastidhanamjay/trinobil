@@ -6,15 +6,22 @@ import { toast } from 'sonner';
 import { Badge, Button, Card, Empty, Field, Input, Modal, PageHeader, Select, Spinner, Table, Td, Toggle } from '@/components/ui';
 import { call, core, errorMessage, imageUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
-import { gstSlabs, money, qty, units } from '@/lib/format';
-import { useCategories, useProducts, type Product } from '@/lib/queries';
+import { money, qty, units } from '@/lib/format';
+import { GstInput, isGstRate } from '@/components/GstInput';
+import { FitmentEditor, VehicleFilterBar, fitmentRequest } from '@/components/Vehicles';
+import { fits, fitLabel, useModule, type Fitment, type VehicleFilter } from '@/lib/spares';
+import { useCategories, useProducts, type Product, useSettings } from '@/lib/queries';
 
 export function ItemsPage() {
   const auth = useAuth();
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [showInactive, setShowInactive] = useState(false);
+  const [vehicle, setVehicle] = useState<VehicleFilter>();
+  const spares = useModule('PART_NUMBERS');
   const products = useProducts(search, categoryId || undefined, showInactive);
+  // Auto spares: only the parts that fit the chosen vehicle.
+  const rows = (products.data ?? []).filter((p) => !vehicle || fits(p, vehicle));
   const categories = useCategories();
   const [editing, setEditing] = useState<Product | 'new'>();
   const [categoriesOpen, setCategoriesOpen] = useState(false);
@@ -24,7 +31,7 @@ export function ItemsPage() {
     <>
       <PageHeader
         title="Items"
-        subtitle={`${products.data?.length ?? 0} items`}
+        subtitle={`${rows.length} items`}
         actions={
           auth.canManage && (
             <>
@@ -38,7 +45,7 @@ export function ItemsPage() {
         <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 px-3 py-2">
           <div className="relative min-w-56 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-            <Input className="pl-9" placeholder="Search name, SKU or barcode" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <Input className="pl-9" placeholder={spares ? 'Search name, part number, SKU or barcode' : 'Search name, SKU or barcode'} value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
           <Select className="w-48" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
             <option value="">All categories</option>
@@ -48,13 +55,19 @@ export function ItemsPage() {
             <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} /> Show removed
           </label>
         </div>
+        {spares && (
+          <div className="border-b border-slate-100 px-3 py-2">
+            <VehicleFilterBar value={vehicle} onChange={setVehicle} />
+          </div>
+        )}
         {products.isLoading ? (
           <Spinner />
-        ) : (products.data ?? []).length === 0 ? (
+        ) : rows.length === 0 ? (
+          vehicle ? <Empty icon={<Boxes className="size-10" />} title="No parts for this vehicle" hint="Set the vehicles an item fits in the item's details." /> :
           <Empty icon={<Boxes className="size-10" />} title="No items" hint="Add your first item to start billing." />
         ) : (
           <Table head={['Item', 'Category', 'Price', 'MRP', 'GST', 'Stock', '']}>
-            {(products.data ?? []).map((p) => (
+            {rows.map((p) => (
               <tr key={p.id} className={auth.canManage ? 'cursor-pointer hover:bg-slate-50' : ''} onClick={() => auth.canManage && setEditing(p)}>
                 <Td>
                   <div className="flex items-center gap-3">
@@ -63,7 +76,10 @@ export function ItemsPage() {
                     </div>
                     <div>
                       <p className="font-semibold">{p.name}</p>
-                      <p className="text-xs text-slate-400">{[p.sku, p.barcode].filter(Boolean).join(' · ')}</p>
+                      <p className="text-xs text-slate-400">
+                        {[p.partNumber && `Part ${p.partNumber}`, p.rackLocation && `Rack ${p.rackLocation}`, p.sku, p.barcode].filter(Boolean).join(' · ')}
+                      </p>
+                      {(p.fitments?.length ?? 0) > 0 && <p className="text-xs text-brand-700">{p.fitments!.map(fitLabel).join(', ')}</p>}
                     </div>
                   </div>
                 </Td>
@@ -93,13 +109,17 @@ export function ItemsPage() {
 function ItemForm({ product, onClose }: { product?: Product; onClose: () => void }) {
   const queryClient = useQueryClient();
   const categories = useCategories();
+  const gstRegistered = useSettings().data?.gstRegistered ?? true;
+  const spares = useModule('PART_NUMBERS');
+  const tradePricing = useModule('TRADE_PRICE');
+  const [fitments, setFitments] = useState<Fitment[]>(product?.fitments ?? []);
   const [f, setF] = useState({
     name: product?.name ?? '',
     categoryId: product?.categoryId ?? '',
     price: product?.price?.toString() ?? '',
     mrp: product?.mrp?.toString() ?? '',
     costPrice: product?.costPrice?.toString() ?? '',
-    taxRate: product?.taxRate ?? 0,
+    taxRate: product?.taxRate?.toString() ?? '',
     taxInclusive: product?.taxInclusive ?? true,
     unit: product?.unit ?? 'PCS',
     sku: product?.sku ?? '',
@@ -108,6 +128,11 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
     reorderLevel: product?.reorderLevel?.toString() ?? '',
     trackInventory: product?.trackInventory ?? true,
     openingStock: '',
+    partNumber: product?.partNumber ?? '',
+    altPartNumbers: product?.altPartNumbers ?? '',
+    fitsVehicles: product?.fitsVehicles ?? '',
+    rackLocation: product?.rackLocation ?? '',
+    tradePrice: product?.tradePrice?.toString() ?? '',
   });
   const [photo, setPhoto] = useState<File>();
   const [busy, setBusy] = useState(false);
@@ -116,6 +141,10 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
 
   async function save(e: FormEvent) {
     e.preventDefault();
+    // GST is the shop's own rate for each item: no default.
+    if (f.taxRate !== '' ? !isGstRate(f.taxRate) : gstRegistered) {
+      return toast.error('Enter the GST % (0 to 100)');
+    }
     setBusy(true);
     try {
       const body = {
@@ -124,7 +153,7 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
         price: Number(f.price),
         mrp: num(f.mrp),
         costPrice: num(f.costPrice),
-        taxRate: Number(f.taxRate),
+        taxRate: f.taxRate === '' ? undefined : Number(f.taxRate),
         taxInclusive: f.taxInclusive,
         unit: f.unit,
         sku: f.sku.trim() || undefined,
@@ -133,6 +162,14 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
         reorderLevel: num(f.reorderLevel),
         trackInventory: f.trackInventory,
         openingStock: product ? undefined : num(f.openingStock),
+        ...(spares && {
+          partNumber: f.partNumber.trim(),
+          altPartNumbers: f.altPartNumbers.trim(),
+          fitsVehicles: f.fitsVehicles.trim(),
+          rackLocation: f.rackLocation.trim(),
+          fitments: fitmentRequest(fitments),
+        }),
+        ...(tradePricing && { tradePrice: num(f.tradePrice) ?? 0 }),
       };
       const saved = product
         ? await call(core.PUT('/api/v1/core/products/{id}', { params: { path: { id: product.id! } }, body }))
@@ -199,9 +236,7 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
           <Input inputMode="decimal" value={f.costPrice} onChange={set('costPrice')} />
         </Field>
         <Field label="GST %">
-          <Select value={f.taxRate} onChange={(e) => setF({ ...f, taxRate: Number(e.target.value) })}>
-            {gstSlabs.map((r) => <option key={r} value={r}>{r}%</option>)}
-          </Select>
+          <GstInput value={f.taxRate} onChange={(v) => setF({ ...f, taxRate: v })} />
         </Field>
         <Field label="Category">
           <Select value={f.categoryId} onChange={set('categoryId')}>
@@ -237,6 +272,31 @@ function ItemForm({ product, onClose }: { product?: Product; onClose: () => void
             <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => setPhoto(e.target.files?.[0])} />
           </label>
         </Field>
+        {tradePricing && (
+          <Field label="Mechanic / trade price" hint="For customers marked as mechanic or garage">
+            <Input inputMode="decimal" value={f.tradePrice} onChange={set('tradePrice')} placeholder="Empty: selling price" />
+          </Field>
+        )}
+        {spares && (
+          <>
+            <p className="pt-2 text-sm font-semibold text-slate-700 sm:col-span-2">Part details</p>
+            <Field label="Part number" hint="Company / OEM number">
+              <Input value={f.partNumber} onChange={set('partNumber')} maxLength={64} />
+            </Field>
+            <Field label="Rack / bin">
+              <Input value={f.rackLocation} onChange={set('rackLocation')} maxLength={40} placeholder="e.g. A3-2" />
+            </Field>
+            <Field label="Alternate part numbers" hint="Other brands' numbers, separated by commas" className="sm:col-span-2">
+              <Input value={f.altPartNumbers} onChange={set('altPartNumbers')} maxLength={500} />
+            </Field>
+            <Field label="Fits vehicles" hint="From your vehicle list (Vehicles page)" className="sm:col-span-2">
+              <FitmentEditor value={fitments} onChange={setFitments} />
+            </Field>
+            <Field label="Other fit notes" hint="Searched too, e.g. engine or chassis codes" className="sm:col-span-2">
+              <Input value={f.fitsVehicles} onChange={set('fitsVehicles')} maxLength={500} />
+            </Field>
+          </>
+        )}
         <div className="sm:col-span-2">
           <Toggle checked={f.taxInclusive} onChange={(v) => setF({ ...f, taxInclusive: v })} label="Price includes GST" />
           <Toggle checked={f.trackInventory} onChange={(v) => setF({ ...f, trackInventory: v })} label="Track stock" hint="Stock goes down with every sale" />

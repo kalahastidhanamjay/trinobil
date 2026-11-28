@@ -2,7 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Plus, Search, Users } from 'lucide-react';
 import { useMemo, useState, type FormEvent } from 'react';
 import { toast } from 'sonner';
-import { Button, Card, Empty, Field, Input, Modal, PageHeader, Spinner, Table, Td, Textarea } from '@/components/ui';
+import { Badge, Button, Card, Empty, Field, Input, Modal, PageHeader, Spinner, Table, Td, Textarea, Toggle } from '@/components/ui';
+import { useModule } from '@/lib/spares';
 import { errorMessage } from '@/lib/api';
 
 export type Contact = {
@@ -18,6 +19,8 @@ export type Contact = {
   pincode?: string;
   contactPerson?: string;
   notes?: string;
+  /** Customer: mechanic / garage paying items' trade price. */
+  tradeCustomer?: boolean;
 };
 
 type Props = {
@@ -64,7 +67,11 @@ export function ContactsPage({ title, noun, queryKey, rows, loading, canEdit, su
           <Table head={['Name', supplier ? 'Phone' : 'Mobile', 'Email', 'GSTIN', 'City']}>
             {visible.map((c) => (
               <tr key={c.id} className={canEdit ? 'cursor-pointer hover:bg-slate-50' : ''} onClick={() => canEdit && setEditing(c)}>
-                <Td className="font-semibold">{c.name}{c.contactPerson && <span className="block text-xs font-normal text-slate-400">{c.contactPerson}</span>}</Td>
+                <Td className="font-semibold">
+                  {c.name}
+                  {c.tradeCustomer && <span className="ml-2"><Badge tone="indigo">Mechanic</Badge></span>}
+                  {c.contactPerson && <span className="block text-xs font-normal text-slate-400">{c.contactPerson}</span>}
+                </Td>
                 <Td>{(supplier ? c.phone : c.mobile) ?? '—'}</Td>
                 <Td className="text-slate-500">{c.email ?? '—'}</Td>
                 <Td className="text-slate-500">{c.gstin ?? '—'}</Td>
@@ -100,6 +107,7 @@ function ContactForm({ contact, noun, supplier, queryKey, save, remove, onClose 
 }) {
   const queryClient = useQueryClient();
   const [f, setF] = useState<Contact>({ ...contact });
+  const tradePricing = useModule('TRADE_PRICE');
   const [busy, setBusy] = useState(false);
   const set = (k: keyof Contact) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
@@ -161,6 +169,11 @@ function ContactForm({ contact, noun, supplier, queryKey, save, remove, onClose 
         <Field label="State"><Input value={f.state ?? ''} onChange={set('state')} /></Field>
         <Field label="PIN code"><Input inputMode="numeric" value={f.pincode ?? ''} onChange={set('pincode')} maxLength={6} /></Field>
         {!supplier && <Field label="Notes" className="sm:col-span-2"><Textarea value={f.notes ?? ''} onChange={set('notes')} /></Field>}
+        {!supplier && tradePricing && (
+          <div className="sm:col-span-2">
+            <Toggle checked={!!f.tradeCustomer} onChange={(v) => setF({ ...f, tradeCustomer: v })} label="Mechanic / garage (trade price)" hint="Bills for this customer use the trade price of items" />
+          </div>
+        )}
       </form>
     </Modal>
   );

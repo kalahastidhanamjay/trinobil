@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Badge, Button, Card, Empty, Input, Modal, PageHeader, Select, Spinner, Tabs } from '@/components/ui';
 import { call, core, identity } from '@/lib/api';
 import { dateTime, daysAgo, money, time } from '@/lib/format';
+import { useBusiness } from '@/lib/queries';
 import type { components } from '@/api/core';
 
 type Entry = components['schemas']['ActivityEntry'];
@@ -89,6 +90,8 @@ export function ActivityPage() {
 }
 
 function ActivityList({ entityId }: { entityId?: string }) {
+  // The restaurant filter only for businesses with tables.
+  const restaurant = (useBusiness().data?.modules ?? []).includes('TABLES');
   const [days, setDays] = useState(entityId ? 0 : 7);
   const [actor, setActor] = useState('');
   const [group, setGroup] = useState('');
@@ -130,7 +133,7 @@ function ActivityList({ entityId }: { entityId?: string }) {
           </Select>
           <Select className="w-40" value={group} onChange={(e) => setGroup(e.target.value)}>
             <option value="">All types</option>
-            {Object.keys(groups).map((g) => <option key={g} value={g}>{g}</option>)}
+            {Object.keys(groups).filter((g) => restaurant || g !== 'Restaurant').map((g) => <option key={g} value={g}>{g}</option>)}
           </Select>
         </div>
       )}

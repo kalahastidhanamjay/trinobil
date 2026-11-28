@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Badge, Button, Card, Empty, Field, Input, Modal, PageHeader, Spinner, Table, Td } from '@/components/ui';
 import { call, errorMessage, identity } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { useBusiness } from '@/lib/queries';
 import { dateTime } from '@/lib/format';
 import type { components } from '@/api/identity';
 
@@ -95,6 +96,10 @@ export function StaffPage() {
 }
 
 function StaffForm({ user, onClose, onSaved }: { user?: User; onClose: () => void; onSaved: () => void }) {
+  // Waiter and chef are for restaurants (tables, kitchen screen) only.
+  const modules = useBusiness().data?.modules ?? [];
+  const restaurant = ['TABLES', 'WAITER_APP', 'KITCHEN_DISPLAY'].some((m) => modules.includes(m));
+  const roleChoices = roleOptions.filter((r) => restaurant || !['WAITER', 'CHEF'].includes(r.value));
   const [fullName, setFullName] = useState(user?.fullName ?? '');
   const [email, setEmail] = useState(user?.email ?? '');
   const [mobile, setMobile] = useState(user?.mobile ?? '');
@@ -135,7 +140,7 @@ function StaffForm({ user, onClose, onSaved }: { user?: User; onClose: () => voi
         <div>
           <p className="mb-2 text-sm font-medium text-slate-700">Roles</p>
           <div className="space-y-2">
-            {roleOptions.map((r) => (
+            {roleChoices.map((r) => (
               <label key={r.value} className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-200 p-3 hover:bg-slate-50">
                 <input
                   type="checkbox"
